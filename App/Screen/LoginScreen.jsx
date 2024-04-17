@@ -1,8 +1,32 @@
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native'
 import React from 'react'
 import Colors from '../../Utils/Colors';
+import * as WebBrowser from 'expo-web-browser';
+import { useWarmUpBrowser } from '../../Hooks/userWarmUpBrowser';
+import { useOAuth } from '@clerk/clerk-expo';
 
+
+WebBrowser.maybeCompleteAuthSession();
 export default function LoginScreen() {
+
+    useWarmUpBrowser();
+
+    const { startOAuthFlow } = useOAuth({ strategy: "oauth_google"});
+
+    const onPress = async() => {
+        try{
+            const { createdSessionId, signIn, signUp, setActive } = await startOAuthFlow();
+
+            if (createdSessionId){
+                setActive({ session: createdSessionId });
+            } else {
+                //Use SigIn or SignUp for next steps 
+            }
+        }
+        catch (err){
+            console.error("OAuth error", err);
+        }
+    }
     return (
         <View style={styles.container}>
             <Image source={require('./../../assets/images/logo.png')}
@@ -21,7 +45,9 @@ export default function LoginScreen() {
                     Find EV Charging Station near you, plan trip and so much more in just one click
                 </Text>
 
-                <TouchableOpacity style={styles.button}>
+                <TouchableOpacity style={styles.button}
+                onPress={onPress}
+                >
                     <Text style={{
                         color: Colors.WHITE,
                         textAlign: 'center',
