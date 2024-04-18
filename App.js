@@ -6,6 +6,9 @@ import Api from './Utils/Api';
 import * as SecureStore from 'expo-secure-store';
 import { NavigationContainer } from '@react-navigation/native';
 import TabNavigation from './App/Navigation/TabNavigation';
+import * as Location from 'expo-location'
+import { useEffect, useState } from 'react';
+import { UserLocationContext } from './App/Context/UserLocationContext';
 
 
 const tokenCache = {
@@ -27,23 +30,50 @@ const tokenCache = {
 }
 
 export default function App() {
+
+  const [location, setLocation] = useState(null);
+  const [errorMsg, setErrorMsg]= useState(null);
+
+  useEffect(() => {
+    (async() => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+
+      if(status !== 'granted'){
+        setErrorMsg('Permission to access location was denied');
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+    })();
+  },[]);
+
+  let text = 'Waiting...'
+  if(errorMsg){
+    text = errorMsg;
+  } else if (location) {
+    text = JSON.stringify(location);
+  }
+
   return (
     <ClerkProvider 
     publishableKey={Api.CLERK_API_KEY}
     tokenCache={tokenCache}
     >
-      <View style={styles.container}>
-        <SignedIn>
-          <NavigationContainer>
-            <TabNavigation/>
-          </NavigationContainer>
-        </SignedIn>
+      <UserLocationContext.Provider value={{location, setLocation}}>
+        <View style={styles.container}>
+          <SignedIn>
+            <NavigationContainer>
+              <TabNavigation/>
+            </NavigationContainer>
+          </SignedIn>
 
-        <SignedOut>
-          <LoginScreen/>
-        </SignedOut>
-        <StatusBar style="auto" />
-      </View>
+          <SignedOut>
+            <LoginScreen/>
+          </SignedOut>
+          <StatusBar style="auto" />
+        </View>
+      </UserLocationContext.Provider>
     </ClerkProvider>
   );
 }
