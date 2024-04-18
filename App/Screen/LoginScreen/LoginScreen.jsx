@@ -1,8 +1,8 @@
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native'
 import React from 'react'
-import Colors from '../../Utils/Colors';
+import Colors from '../../../Utils/Colors';
 import * as WebBrowser from 'expo-web-browser';
-import { useWarmUpBrowser } from '../../Hooks/userWarmUpBrowser';
+import { useWarmUpBrowser } from '../../../Hooks/userWarmUpBrowser';
 import { useOAuth } from '@clerk/clerk-expo';
 
 
@@ -29,11 +29,11 @@ export default function LoginScreen() {
     }
     return (
         <View style={styles.container}>
-            <Image source={require('./../../assets/images/logo.png')}
+            <Image source={require('./../../../assets/images/logo.png')}
             style={styles.logoImg}
             />
 
-            <Image source={require('./../../assets/images/ev-charging.png')}
+            <Image source={require('./../../../assets/images/ev-charging.png')}
             style={styles.bgImage}
             />
 

@@ -1,8 +1,8 @@
 import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import HomeScreen from '../Screen/HomeScreen';
-import FavouriteScreen from '../Screen/FavouriteScreen';
-import ProfileScreen from '../Screen/ProfileScreen';
+import HomeScreen from '../Screen/HomeScreen/HomeScreen';
+import FavouriteScreen from '../Screen/FavouriteScreen/FavouriteScreen';
+import ProfileScreen from '../Screen/ProfileScreen/ProfileScreen';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Colors from '../../Utils/Colors';
 
